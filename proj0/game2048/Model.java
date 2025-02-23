@@ -137,9 +137,9 @@ public class Model extends Observable {
      *  Empty spaces are stored as null.
      * */
     public static boolean emptySpaceExists(Board b) {
-        for (int i = 0; i < b.size(); i += 1) {
-            for (int j = 0; j < b.size(); j += 1) {
-                if (b.tile(i, j) == null) {
+        for (int col = 0; col < b.size(); col += 1) {
+            for (int row = 0; row < b.size(); row += 1) {
+                if (b.tile(col, row) == null) {
                     return true;
                 }
             }
@@ -154,9 +154,9 @@ public class Model extends Observable {
      */
     public static boolean maxTileExists(Board b) {
         boolean exist = false;
-        for (int i = 0; i < b.size(); i += 1) {
-            for (int j = 0; j < b.size(); j += 1) {
-                if (b.tile(i, j) != null && b.tile(i, j).value() == MAX_PIECE) {
+        for (int col = 0; col < b.size(); col += 1) {
+            for (int row = 0; row < b.size(); row += 1) {
+                if (b.tile(col, row) != null && b.tile(col, row).value() == MAX_PIECE) {
                     exist = true;
                 }
             }
@@ -174,15 +174,15 @@ public class Model extends Observable {
         if (emptySpaceExists(b)) {
             return true;
         }
-        for (int i = 0; i < b.size(); i += 1) {
-            for (int j = 0; j < b.size(); j += 1) {
-                final int current = b.tile(i, j).value();
+        for (int col = 0; col < b.size(); col += 1) {
+            for (int row = 0; row < b.size(); row += 1) {
+                final int current = b.tile(col, row).value();
                 // right
-                if (i < b.size() - 1 && current == b.tile(i + 1, j).value()) {
+                if (col < b.size() - 1 && current == b.tile(col + 1, row).value()) {
                     return true;
                 }
                 // down
-                if (j < b.size() - 1 && current == b.tile(i, j + 1).value()) {
+                if (row < b.size() - 1 && current == b.tile(col, row + 1).value()) {
                     return true;
                 }
             }
