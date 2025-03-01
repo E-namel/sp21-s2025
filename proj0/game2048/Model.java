@@ -121,26 +121,22 @@ public class Model extends Observable {
             for (int r = board.size() - 1; r >= 0; r -= 1) {  // 纵向 row 最下一行为 0
                 Tile t = board.tile(c, r);
                 if (t != null) {
-                    int destinyRow;
+                    int destinyRow = board.size() - heapHeight;
                     if (merged) {
-                        destinyRow = board.size() - 1 - heapHeight;
-                        board.move(c, destinyRow, t);
+                        destinyRow -= 1;
                         merged = false;
-                        heapHeight += 1;
                     } else {
-                        destinyRow = board.size() - heapHeight;
+                        // check if can be merge
                         if (board.tile(c, destinyRow).value() == t.value()) {
-                            board.move(c, destinyRow, t);
                             merged = true;
-                            // heapHeight doesn't change
                             this.score += t.value() * 2;
                         } else {
                             destinyRow -= 1;
-                            board.move(c, destinyRow, t);
-                            heapHeight += 1;
                         }
                     }
-                    // if changed
+                    board.move(c, destinyRow, t);
+                    heapHeight += merged ? 0 : 1;
+                    // if one tile moved
                     if (destinyRow != r) {
                         changed = true;
                     }
