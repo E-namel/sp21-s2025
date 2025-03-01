@@ -113,11 +113,46 @@ public class Model extends Observable {
         // TODO: Modify this.board (and perhaps this.score) to account
         // for the tilt to the Side SIDE. If the board changed, set the
         // changed local variable to true.
+        board.setViewingPerspective(side);  // north by default
+        for (int c = board.size() - 1; c >= 0; c -= 1) {  // 横向 col 最左一列为 0
+            int heapHeight = 0;
+            boolean merged;  // when merged: heapHeight keep, can't merge again
+            merged = true;  // default ture to make sure not compare with null
+            for (int r = board.size() - 1; r >= 0; r -= 1) {  // 纵向 row 最下一行为 0
+                Tile t = board.tile(c, r);
+                if (t != null) {
+                    int destinyRow;
+                    if (merged) {
+                        destinyRow = board.size() - 1 - heapHeight;
+                        board.move(c, destinyRow, t);
+                        merged = false;
+                        heapHeight += 1;
+                    } else {
+                        destinyRow = board.size() - heapHeight;
+                        if (board.tile(c, destinyRow).value() == t.value()) {
+                            board.move(c, destinyRow, t);
+                            merged = true;
+                            // heapHeight doesn't change
+                            this.score += t.value() * 2;
+                        } else {
+                            destinyRow -= 1;
+                            board.move(c, destinyRow, t);
+                            heapHeight += 1;
+                        }
+                    }
+                    // if changed
+                    if (destinyRow != r) {
+                        changed = true;
+                    }
+                }
+            }
+        }
 
         checkGameOver();
         if (changed) {
             setChanged();
         }
+        board.setViewingPerspective(Side.NORTH);
         return changed;
     }
 
